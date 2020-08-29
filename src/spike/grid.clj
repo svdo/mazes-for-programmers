@@ -1,14 +1,16 @@
-(ns spike.grid)
+(ns spike.grid
+  (:require [clojure.string :as s]))
 
 (declare get-cell)
+(declare valid-coords)
 
 (defn- add-neighbors-for-cell
   [grid cell]
   (-> cell
-      (assoc :north (get-cell grid (dec (:row cell)) (:col cell)))
-      (assoc :south (get-cell grid (inc (:row cell)) (:col cell)))
-      (assoc :west (get-cell grid (:row cell) (dec (:col cell))))
-      (assoc :east (get-cell grid (:row cell) (inc (:col cell))))))
+      (assoc :north (valid-coords grid (dec (:row cell)) (:col cell)))
+      (assoc :south (valid-coords grid (inc (:row cell)) (:col cell)))
+      (assoc :west (valid-coords grid (:row cell) (dec (:col cell))))
+      (assoc :east (valid-coords grid (:row cell) (inc (:col cell))))))
 
 (defn- add-neighbors
   [grid]
@@ -29,10 +31,18 @@
   [grid]
   (count (first grid)))
 
+(defn- valid-coords?
+  [grid row col]
+  (and (>= (dec (height grid)) row 0)
+       (>= (dec (width grid)) col 0)))
+
+(defn- valid-coords
+  [grid row col]
+  (when (valid-coords? grid row col) [row col]))
+
 (defn get-cell
   [grid row col]
-  (when (and (>= (dec (height grid)) row 0)
-             (>= (dec (width grid)) col 0))
+  (when (valid-coords? grid row col)
     (get-in grid [row col])))
 
 (defn coords
@@ -43,6 +53,6 @@
   [grid [row1 col1] [row2 col2]]
   (-> grid
       (update-in [row1 col1 :links]
-                 #(conj % (get-cell grid row2 col2)))
+                 #(conj % [row2 col2]))
       (update-in [row2 col2 :links]
-                 #(conj % (get-cell grid row1 col1)))))
+                 #(conj % [row1 col1]))))

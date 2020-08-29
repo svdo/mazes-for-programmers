@@ -21,10 +21,10 @@
     (is (= 3 (:col (-> grid-10-10 (grid/get-cell 2 3))))))
 
   (testing "cells know their neighbors"
-    (is (= [2 3] (grid/coords (:north (grid/get-cell grid-10-10 3 3)))))
-    (is (= [4 3] (grid/coords (:south (grid/get-cell grid-10-10 3 3)))))
-    (is (= [3 2] (grid/coords (:west (grid/get-cell grid-10-10 3 3)))))
-    (is (= [3 4] (grid/coords (:east (grid/get-cell grid-10-10 3 3)))))
+    (is (= [2 3] (:north (grid/get-cell grid-10-10 3 3))))
+    (is (= [4 3] (:south (grid/get-cell grid-10-10 3 3))))
+    (is (= [3 2] (:west (grid/get-cell grid-10-10 3 3))))
+    (is (= [3 4] (:east (grid/get-cell grid-10-10 3 3))))
     (is (nil? (:north (grid/get-cell grid-10-10 0 3))))
     (is (nil? (:south (grid/get-cell grid-10-10 9 3))))
     (is (nil? (:west (grid/get-cell grid-10-10 3 0))))
@@ -35,11 +35,11 @@
 
   (testing "creating a link is bidirectional"
     (is (let [updated-grid (grid/link-cells grid-10-10 [1 1] [1 2])]
-          (and (= #{(grid/get-cell grid-10-10 1 2)}
+          (and (= #{[1 2]}
                   (-> updated-grid
                       (grid/get-cell 1 1)
                       :links))
-               (= #{(grid/get-cell grid-10-10 1 1)}
+               (= #{[1 1]}
                   (-> updated-grid
                       (grid/get-cell 1 2)
                       :links)))))))
