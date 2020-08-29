@@ -1,14 +1,13 @@
 (ns spike.maze
   (:gen-class)
-  (:require [lanterna.screen :as s]
-            [lanterna.terminal :as t]))
-
-(def term (t/get-terminal :unix))
+  (:require [spike.grid :as grid]
+            [spike.generate.binary-tree :as binary-tree]
+            [spike.render.ascii :as ascii]))
 
 (defn -main
-  [& _]
-  ;; (t/start term)
-  ;; (t/put-character term \H)
-  ;; (t/move-cursor term 40 12)
-  ;; (t/put-character term \@)
-  )
+  [size-str & _]
+  (let [size (read-string size-str)]
+    (-> (grid/create size size)
+        binary-tree/carve
+        ascii/to-str
+        println)))
