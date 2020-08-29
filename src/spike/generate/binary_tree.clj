@@ -2,14 +2,14 @@
   (:require [spike.grid :as grid]))
 
 (defn- carve-cell
-  [grid cell]
+  [cell]
   (let [neighbors (remove nil? ((juxt :north :east) cell))]
     (when (seq neighbors)
       [[(:row cell) (:col cell)] (rand-nth neighbors)])))
 
 (defn- carve-row
-  [grid row]
-  (map (partial carve-cell grid) row))
+  [row]
+  (map carve-cell row))
 
 (defn- apply-carvings
   [grid carvings]
@@ -18,5 +18,5 @@
 
 (defn carve
   [grid]
-  (let [carvings (remove nil? (mapcat (partial carve-row grid) grid))]
+  (let [carvings (remove nil? (mapcat carve-row grid))]
     (apply-carvings grid carvings)))
