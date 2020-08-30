@@ -2,17 +2,17 @@
   (:require [spike.grid :as grid]
             [clojure.string :as s]))
 
-(defn- cell->ascii->middle
-  [cell]
-  (s/join ["   "
-           (if ((:links cell) (:east cell))
-             " "
-             "│")]))
-
-(defn- has
+(defn- linked?
   [cell direction]
   (and (some? cell)
        (some? ((:links cell) (direction cell)))))
+
+(defn- cell->ascii->middle
+  [cell]
+  (s/join ["   "
+           (if (linked? cell :east)
+             " "
+             "│")]))
 
 (defn- cell->ascii->bottom
   [row next-row]
@@ -24,35 +24,35 @@
                                 (empty? parts) ;; first cell of the row
                                 (cond
                                   (nil? (:south cell)) "└"
-                                  (has cell :south) "│"
+                                  (linked? cell :south) "│"
                                   :else "├")
 
                                 (nil? (:south cell))
-                                (if (has cell :west) "─" "┴")
+                                (if (linked? cell :west) "─" "┴")
 
-                                (has next-row-cell :west)
-                                (cond (has cell :west) "─"
-                                      (has prev-cell :south) "└"
-                                      (has cell :south) "┘"
+                                (linked? next-row-cell :west)
+                                (cond (linked? cell :west) "─"
+                                      (linked? prev-cell :south) "└"
+                                      (linked? cell :south) "┘"
                                       :else "┴")
 
-                                (has cell :south)
-                                (cond (has prev-cell :south) "│"
-                                      (has cell :west) "┐"
+                                (linked? cell :south)
+                                (cond (linked? prev-cell :south) "│"
+                                      (linked? cell :west) "┐"
                                       :else "┤")
 
-                                (has cell :west)
-                                (if (has prev-cell :south) "┌" "┬")
+                                (linked? cell :west)
+                                (if (linked? prev-cell :south) "┌" "┬")
 
-                                (has prev-cell :south)
+                                (linked? prev-cell :south)
                                 "├"
 
                                 :else
                                 "┼")
-                    mid-part (if (has cell :south) "   " "───")
+                    mid-part (if (linked? cell :south) "   " "───")
                     right-side (or (when (empty? rest)
                                      (cond (nil? (:south cell)) "┘"
-                                           (has cell :south) "│"
+                                           (linked? cell :south) "│"
                                            :else "┤"))
                                    "")]
                 (recur rest next-row-rest cell (conj parts (str left-side mid-part right-side))))))]
