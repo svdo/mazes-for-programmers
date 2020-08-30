@@ -1,11 +1,6 @@
 (ns spike.render.box
-  (:require [spike.grid :as grid]
+  (:require [spike.grid :refer [linked?]]
             [clojure.string :as s]))
-
-(defn- linked?
-  [cell direction]
-  (and (some? cell)
-       (some? ((:links cell) (direction cell)))))
 
 (defn- cell->ascii->middle
   [cell]

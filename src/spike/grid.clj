@@ -56,3 +56,8 @@
                  #(conj % [row2 col2]))
       (update-in [row2 col2 :links]
                  #(conj % [row1 col1]))))
+
+(defn linked?
+  [cell direction]
+  (and (some? cell)
+       (some? ((:links cell) (direction cell)))))
