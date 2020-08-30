@@ -1,9 +1,10 @@
 (ns spike.maze
   (:gen-class)
   (:require [spike.grid :as grid]
-            [spike.generate.binary-tree :as binary-tree]
+            #_[spike.generate.binary-tree :as binary-tree]
             [spike.generate.sidewinder :as sidewinder]
-            [spike.render.ascii :as ascii]))
+            #_[spike.render.ascii :as ascii]
+            [spike.render.box :as box]))
 
 (defn -main
   [size-str & _]
@@ -11,5 +12,5 @@
     (-> (grid/create size size)
         ;; binary-tree/carve
         sidewinder/carve
-        ascii/to-str
+        box/to-str
         println)))
