@@ -4,7 +4,7 @@
 
 (defn- cell->ascii->middle
   [cell]
-  (s/join ["   "
+  (s/join [(format "%3s" (or (:contents cell) ""))
            (if (linked? cell :east)
              " "
              "│")]))
