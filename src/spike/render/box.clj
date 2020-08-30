@@ -9,6 +9,11 @@
              " "
              "│")]))
 
+(defn- has
+  [cell direction]
+  (and (some? cell)
+       (some? ((:links cell) (direction cell)))))
+
 (defn- cell->ascii->bottom
   [row next-row]
   (letfn [(cell->ascii->bottom'
@@ -16,40 +21,38 @@
             (if (empty? cells)
               parts
               (let [left-side (cond
-                                (and (empty? parts) (nil? (:south cell)))
-                                "└"
-
-                                (empty? parts)
-                                (if (some? ((:links cell) (:south cell))) "│" "├")
+                                (empty? parts) ;; first cell of the row
+                                (cond
+                                  (nil? (:south cell)) "└"
+                                  (has cell :south) "│"
+                                  :else "├")
 
                                 (nil? (:south cell))
-                                (if (some? ((:links cell) (:west cell))) "─" "┴")
+                                (if (has cell :west) "─" "┴")
 
-                                (and (some? next-row-cell)
-                                     (some? ((:links next-row-cell) (:west next-row-cell))))
-                                (cond (some? ((:links cell) (:west cell))) "─"
-                                      (some? ((:links prev-cell) (:south prev-cell))) "└"
-                                      (some? ((:links cell) (:south cell))) "┘"
+                                (has next-row-cell :west)
+                                (cond (has cell :west) "─"
+                                      (has prev-cell :south) "└"
+                                      (has cell :south) "┘"
                                       :else "┴")
 
-                                (some? ((:links cell) (:south cell)))
-                                (cond (some? ((:links prev-cell) (:south prev-cell))) "│"
-                                      (some? ((:links cell) (:west cell))) "┐"
+                                (has cell :south)
+                                (cond (has prev-cell :south) "│"
+                                      (has cell :west) "┐"
                                       :else "┤")
 
-                                (some? ((:links cell) (:west cell)))
-                                (if (some? ((:links prev-cell) (:south prev-cell))) "┌" "┬")
+                                (has cell :west)
+                                (if (has prev-cell :south) "┌" "┬")
 
-                                (and (some? prev-cell)
-                                     (some? ((:links prev-cell) (:south prev-cell))))
+                                (has prev-cell :south)
                                 "├"
 
                                 :else
                                 "┼")
-                    mid-part (if (some? ((:links cell) (:south cell))) "   " "───")
+                    mid-part (if (has cell :south) "   " "───")
                     right-side (or (when (empty? rest)
                                      (cond (nil? (:south cell)) "┘"
-                                           (some? ((:links cell) (:south cell))) "│"
+                                           (has cell :south) "│"
                                            :else "┤"))
                                    "")]
                 (recur rest next-row-rest cell (conj parts (str left-side mid-part right-side))))))]
