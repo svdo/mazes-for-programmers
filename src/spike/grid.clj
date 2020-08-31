@@ -61,3 +61,7 @@
   [cell direction]
   (and (some? cell)
        (some? ((:links cell) (direction cell)))))
+
+(defn map-cells
+  [f grid]
+  (mapv #(mapv f %) grid))

@@ -42,4 +42,8 @@
                (= #{[1 1]}
                   (-> updated-grid
                       (grid/get-cell 1 2)
-                      :links)))))))
+                      :links))))))
+
+  (testing "mapping over all cells"
+    (is (= [[[0 0] [0 1]] [[1 0] [1 1]]]
+           (grid/map-cells grid/coords (grid/create 2 2))))))
