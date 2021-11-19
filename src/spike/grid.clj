@@ -65,6 +65,10 @@
   (and (some? cell)
        (some? ((:links cell) (direction cell)))))
 
+(defn linked-cells [grid row col]
+  (set (map (partial apply get-cell grid)
+            (:links (get-cell grid row col)))))
+
 (defn map-cells
   [f grid]
   (mapv #(mapv f %) grid))

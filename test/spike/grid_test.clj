@@ -1,8 +1,30 @@
 (ns spike.grid-test
   (:require [clojure.test :refer [deftest testing is]]
-            [spike.grid :as grid]))
+            [spike.grid :as grid]
+            [spike.render.ascii :as ascii]))
 
 (def grid-10-10 (grid/create 10 10))
+
+(def open3x3 
+  (-> (grid/create 3 3)
+      (grid/link-cells [0 0] [0 1])
+      (grid/link-cells [0 1] [0 2])
+      (grid/link-cells [0 0] [1 0])
+      (grid/link-cells [0 1] [1 1])
+      (grid/link-cells [0 2] [1 2])
+
+      (grid/link-cells [1 0] [1 1])
+      (grid/link-cells [1 1] [1 2])
+      (grid/link-cells [1 0] [2 0])
+      (grid/link-cells [1 1] [2 1])
+      (grid/link-cells [1 2] [2 2])
+
+      (grid/link-cells [2 0] [2 1])
+      (grid/link-cells [2 1] [2 2])))
+
+
+(comment 
+  (print (ascii/to-str open3x3)))
 
 (deftest grid-test
   (testing "create a new grid"
@@ -34,8 +56,8 @@
     (is (empty? (:links (-> grid-10-10 (grid/get-cell 1 1))))))
 
   (testing "creating a link is bidirectional"
-    (is (let [updated-grid (grid/link-cells grid-10-10 [1 1] [1 2])]
-          (and (= #{[1 2]}
+    (let [updated-grid (grid/link-cells grid-10-10 [1 1] [1 2])]
+      (is (and (= #{[1 2]}
                   (-> updated-grid
                       (grid/get-cell 1 1)
                       :links))
@@ -43,6 +65,19 @@
                   (-> updated-grid
                       (grid/get-cell 1 2)
                       :links))))))
+  
+  (testing "linked cells of an unreachable cell"
+    (let [grid (grid/create 2 2)]
+      (is (empty? (grid/linked-cells grid 0 0)))))
+  
+  (testing "linked cells of an open grid"
+    (testing "center of 3x3"
+      (let [grid open3x3]
+        (is (= #{(grid/get-cell grid 0 1)
+                 (grid/get-cell grid 1 0)
+                 (grid/get-cell grid 1 2)
+                 (grid/get-cell grid 2 1)}
+               (grid/linked-cells grid 1 1))))))
 
   (testing "mapping over all cells"
     (is (= [[[0 0] [0 1]] [[1 0] [1 1]]]
