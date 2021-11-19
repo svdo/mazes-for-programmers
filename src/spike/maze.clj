@@ -11,10 +11,11 @@
   [size-str & _]
   (let [size (read-string size-str)
         term (t/get-terminal :unix)]
-    (t/start term)
-    (t/put-string term
-                  (-> (grid/create size size)
-                      ;; binary-tree/carve
-                      sidewinder/carve
-                      box/to-str))
-    (read-line)))
+    (t/in-terminal
+     term
+     (t/put-string term
+                   (-> (grid/create size size)
+                       ;; binary-tree/carve
+                       sidewinder/carve
+                       box/to-str))
+     (read-line))))
