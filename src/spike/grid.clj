@@ -1,5 +1,4 @@
-(ns spike.grid
-  (:require [clojure.string :as s]))
+(ns spike.grid)
 
 (declare get-cell)
 (declare valid-coords)
