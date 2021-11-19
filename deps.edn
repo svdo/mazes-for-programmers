@@ -12,4 +12,7 @@
                     :extra-deps {io.github.cognitect-labs/test-runner
                                  {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}
                     :main-opts ["-m" "cognitect.test-runner"]
-                    :exec-fn cognitect.test-runner.api/test}}}
+                    :exec-fn cognitect.test-runner.api/test}
+           
+           :reveal-dep-only {:extra-deps {vlaaad/reveal {:mvn/version "RELEASE"}}}
+           :portal {:extra-deps {djblue/portal {:mvn/version "RELEASE"}}}}}

@@ -1,0 +1,14 @@
+{
+  "calva.customREPLCommandSnippets": [
+    {
+        "name": "Start Reveal Tapper",
+        "snippet": "(require '[vlaaad.reveal :as reveal])(add-tap (reveal/ui))",
+        "key": "r"
+    },
+    {
+      "name": "Start Portal",
+      "snippet": "(require '[portal.api :as p])(p/open)(add-tap #'p/submit)",
+      "key": "p"
+    }
+  ]
+}
