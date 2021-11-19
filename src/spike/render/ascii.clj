@@ -1,27 +1,37 @@
 (ns spike.render.ascii
   (:require [spike.grid :as grid]
-            [clojure.string :as s]))
+            [clojure.string :as str]))
+
+(defn center-string [width s]
+  (let [s (if (>= width (count s)) s (subs s 0 width))
+        pad-size (- width (count s))
+        pad-start (quot (+ 1 (count s) pad-size) 2)]
+    (->> s
+         (format (str "%" pad-start "s"))
+         (format (str "%-" width "s")))))
 
 (defn- cell->ascii->middle
-  [cell]
-  (s/join [(format "%3s" (or (:contents cell) ""))
-           (if ((:links cell) (:east cell))
-             " "
-             "|")]))
+  [content-fn cell]
+  (str/join [(center-string 3 (or (content-fn cell) ""))
+             (if ((:links cell) (:east cell))
+               " "
+               "|")]))
 
 (defn- cell->ascii->bottom
   [cell]
-  (s/join [(if ((:links cell) (:south cell))
-             "   "
-             "---")
-           "+"]))
+  (str/join [(if ((:links cell) (:south cell))
+               "   "
+               "---")
+             "+"]))
 
 (defn- row->ascii
-  [row]
-  (str "|" (s/join (map cell->ascii->middle row)) "\n"
-       "+" (s/join (map cell->ascii->bottom row)) "\n"))
+  [content-fn row]
+  (str "|" (str/join (map (partial cell->ascii->middle content-fn) row)) "\n"
+       "+" (str/join (map cell->ascii->bottom row)) "\n"))
 
 (defn to-str
-  [grid]
-  (str "\n+" (s/join "+" (repeat (grid/width grid) "---")) "+\n"
-       (apply str (map row->ascii grid))))
+  ([grid]
+   (to-str grid (constantly " ")))
+  ([grid content-fn]
+   (str "\n+" (str/join "+" (repeat (grid/width grid) "---")) "+\n"
+        (apply str (map (partial row->ascii content-fn) grid)))))

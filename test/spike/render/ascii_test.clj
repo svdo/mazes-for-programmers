@@ -32,4 +32,16 @@
 "
            (-> (grid/create 2 2)
                (grid/link-cells [0 1] [1 1])
-               (ascii/to-str))))))
+               (ascii/to-str))))
+
+    (is (= "
++---+---+
+| 0 | 1 |
++---+   +
+| 2 | 3 |
++---+---+
+"
+           (-> (grid/create 2 2 :value (fn [row col] (+ (* 2 row) col)))
+               (grid/link-cells [0 1] [1 1])
+               (ascii/to-str (comp str :value)))))
+    ))

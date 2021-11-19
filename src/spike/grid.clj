@@ -16,11 +16,15 @@
   (mapv #(mapv (partial add-neighbors-for-cell grid) %) grid))
 
 (defn create
-  [width height]
-  (let [cells (vec (for [row (range height)]
-                     (vec (for [col (range width)]
-                            {:row row :col col :links #{}}))))]
-    (add-neighbors cells)))
+  ([width height]
+   (create width height nil nil))
+  ([width height content-key content-fn]
+   (let [cells (vec (for [row (range height)]
+                      (vec (for [col (range width)]
+                             (cond-> {:row row :col col :links #{}}
+                               (some? content-key)
+                               (assoc content-key (content-fn row col)))))))]
+     (add-neighbors cells))))
 
 (defn height
   [grid]
