@@ -28,14 +28,17 @@
 (defn assign-distances-to-frontier [grid frontier next-distance]
   (reduce (partial assign-distances-to-linked-cells next-distance) [grid #{}] frontier))
 
-(defn assign-distances [grid row col]
-  (loop [grid     (assoc-in grid [row col :dijkstra/distance] 0)
-         frontier #{(grid/get-cell grid row col)}
-         distance 1]
-    (if (empty? frontier)
-      grid
-      (let [[updated-grid new-frontier] (assign-distances-to-frontier grid frontier distance)]
-        (recur updated-grid new-frontier (inc distance))))))
+(defn assign-distances
+  ([grid [row col]]
+   (assign-distances grid row col))
+  ([grid row col]
+   (loop [grid     (assoc-in grid [row col :dijkstra/distance] 0)
+          frontier #{(grid/get-cell grid row col)}
+          distance 1]
+     (if (empty? frontier)
+       grid
+       (let [[updated-grid new-frontier] (assign-distances-to-frontier grid frontier distance)]
+         (recur updated-grid new-frontier (inc distance)))))))
 
 (defn neighbor-with-lowest-distance [grid [row col] max-distance]
   ;; (print (spike.render.ascii/to-str grid (comp str :dijkstra/distance)) )
