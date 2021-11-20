@@ -52,6 +52,10 @@
   [cell]
   ((juxt :row :col) cell))
 
+(defn same-coord? [cell1 cell2]
+  (= (coords cell1)
+     (coords cell2)))
+
 (defn link-cells
   [grid [row1 col1] [row2 col2]]
   (-> grid

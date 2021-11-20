@@ -11,10 +11,6 @@
     (not (has-distance? cell))
     (assoc-in [(:row cell) (:col cell) :distance] distance)))
 
-(defn same-coord? [cell1 cell2]
-  (= (grid/coords cell1)
-     (grid/coords cell2)))
-
 (defn assign-distances-to-linked-cells [next-distance [grid new-frontier] cell]
   ;; (println "---------- [" next-distance "]")
   ;; (print (spike.render.ascii/to-str grid (comp str :distance)) )
@@ -22,7 +18,7 @@
   (let [linked (grid/linked-cells grid (:row cell) (:col cell))
         next-frontier (-> new-frontier
                           (set/union (set (filter (complement has-distance?) linked)))
-                          ((partial remove (partial same-coord? cell)))
+                          ((partial remove (partial grid/same-coord? cell)))
                           set)]
     ;; (println "next frontier: " (map grid/coords next-frontier))
     [(reduce (partial set-cell-distance next-distance) grid linked)
