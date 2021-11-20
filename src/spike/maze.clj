@@ -5,6 +5,7 @@
             [spike.generate.sidewinder :as sidewinder]
             #_[spike.render.ascii :as ascii]
             [spike.render.box :as box]
+            [spike.solve.dijkstra :as dijkstra]
             [lanterna.terminal :as t]))
 
 (defn -main
@@ -17,5 +18,6 @@
                    (-> (grid/create size size)
                        ;; binary-tree/carve
                        sidewinder/carve
-                       box/to-str))
+                       (dijkstra/assign-distances 10 10)
+                       (box/to-str (comp str :distance))))
      (read-line))))
