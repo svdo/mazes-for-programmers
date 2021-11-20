@@ -1,10 +1,11 @@
 (ns spike.render.box
-  (:require [spike.grid :refer [linked?]]
-            [clojure.string :as s]))
+  (:require [clojure.string :as s]
+            [spike.grid :refer [linked?]]
+            [spike.string-utils :refer [center-string]]))
 
 (defn- cell->ascii->middle
-  [cell]
-  (s/join [(format "%3s" (or (:contents cell) ""))
+  [content-fn cell]
+  (s/join [(center-string 3 (or (content-fn cell) ""))
            (if (linked? cell :east)
              " "
              "│")]))
@@ -54,9 +55,9 @@
     (cell->ascii->bottom' row next-row nil [])))
 
 (defn- row->ascii
-  [row next-row]
+  [content-fn row next-row]
   (str "│"
-       (s/join (map cell->ascii->middle row))
+       (s/join (map (partial cell->ascii->middle content-fn) row))
        "\n"
        (s/join (cell->ascii->bottom row next-row))
        "\n"))
@@ -78,8 +79,10 @@
     (str "┌" (s/join (top-border' top-row [])))))
 
 (defn to-str
-  [grid]
-  (str "\n" (top-border (first grid)) "\n"
-       (s/join (map row->ascii
-                    grid
-                    (conj (vec (rest grid)) nil)))))
+  ([grid]
+   (to-str grid (constantly " ")))
+  ([grid content-fn]
+   (str "\n" (top-border (first grid)) "\n"
+        (s/join (map (partial row->ascii content-fn)
+                     grid
+                     (conj (vec (rest grid)) nil))))))

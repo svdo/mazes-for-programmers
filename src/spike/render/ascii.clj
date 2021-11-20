@@ -1,14 +1,7 @@
 (ns spike.render.ascii
   (:require [spike.grid :as grid]
-            [clojure.string :as str]))
-
-(defn center-string [width s]
-  (let [s (if (>= width (count s)) s (subs s 0 width))
-        pad-size (- width (count s))
-        pad-start (quot (+ 1 (count s) pad-size) 2)]
-    (->> s
-         (format (str "%" pad-start "s"))
-         (format (str "%-" width "s")))))
+            [clojure.string :as str]
+            [spike.string-utils :refer [center-string]]))
 
 (defn- cell->ascii->middle
   [content-fn cell]
