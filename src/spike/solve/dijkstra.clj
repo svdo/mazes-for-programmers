@@ -3,17 +3,17 @@
             [spike.grid :as grid]))
 
 (defn has-distance? [cell]
-  (some? (:distance cell)))
+  (some? (:dijkstra/distance cell)))
 
 (defn set-cell-distance [distance grid cell]
   ;; (println "set-cell-distance " distance " " (grid/coords cell))
   (cond-> grid
     (not (has-distance? cell))
-    (assoc-in [(:row cell) (:col cell) :distance] distance)))
+    (assoc-in [(:row cell) (:col cell) :dijkstra/distance] distance)))
 
 (defn assign-distances-to-linked-cells [next-distance [grid new-frontier] cell]
   ;; (println "---------- [" next-distance "]")
-  ;; (print (spike.render.ascii/to-str grid (comp str :distance)) )
+  ;; (print (spike.render.ascii/to-str grid (comp str :dijkstra/distance)) )
   ;; (println "cur cell:" (grid/coords cell))
   (let [linked (grid/linked-cells grid (:row cell) (:col cell))
         next-frontier (-> new-frontier
@@ -28,7 +28,7 @@
   (reduce (partial assign-distances-to-linked-cells next-distance) [grid #{}] frontier))
 
 (defn assign-distances [grid row col]
-  (loop [grid     (assoc-in grid [row col :distance] 0)
+  (loop [grid     (assoc-in grid [row col :dijkstra/distance] 0)
          frontier #{(grid/get-cell grid row col)}
          distance 1]
     (if (empty? frontier)

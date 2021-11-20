@@ -19,5 +19,5 @@
                        ;; binary-tree/carve
                        sidewinder/carve
                        (dijkstra/assign-distances 0 0)
-                       (box/to-str (comp str :distance))))
+                       (box/to-str (comp str :dijkstra/distance))))
      (read-line))))
