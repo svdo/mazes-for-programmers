@@ -45,30 +45,28 @@
                  (dijkstra/assign-distances 0 0)
                  (grid/get-cell 0 0)
                  :dijkstra/distance))))
-  
+
   (testing "grid1"
     (is (= [[0 1] [nil nil]]
            (-> grid1
                (dijkstra/assign-distances 0 0)
                ((partial grid/map-cells :dijkstra/distance))))))
-  
+
   (testing "shortest path"
     (is (= [[true true] [nil nil]]
            (-> grid1
                (dijkstra/assign-distances 0 0)
                (dijkstra/mark-shortest-path [0 0] [0 1])
                ((partial grid/map-cells :dijkstra/on-shortest-path))))))
-  
+
   (testing "shortest path 2"
     (is (= [[true true nil] [true true nil] [true true true]]
            (-> grid2
                (dijkstra/assign-distances 0 0)
                (dijkstra/mark-shortest-path [0 0] [2 2])
-               ((partial grid/map-cells :dijkstra/on-shortest-path))))))
-  )
+               ((partial grid/map-cells :dijkstra/on-shortest-path)))))))
 
 (comment
-
   (def open3x3
     (-> (grid/create 3 3)
         (grid/link-cells [0 0] [0 1])
@@ -111,11 +109,7 @@
         (dijkstra/assign-distances 0 0)
         (ascii/to-str (comp str :dijkstra/distance))
         print))
-  
-  (-> open3x3
-      (dijkstra/assign-distances 0 0)
-      (dijkstra/neighbor-with-lowest-distance [1 1]))
-  
+    
   (require '[spike.generate.sidewinder :as sidewinder])
   (def sample-grid (-> (grid/create 10 10)
                        sidewinder/carve))
