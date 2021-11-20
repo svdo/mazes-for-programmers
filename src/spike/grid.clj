@@ -44,9 +44,11 @@
   (when (valid-coords? grid row col) [row col]))
 
 (defn get-cell
-  [grid row col]
-  (when (valid-coords? grid row col)
-    (get-in grid [row col])))
+  ([grid [row col]]
+   (get-cell grid row col))
+  ([grid row col]
+   (when (valid-coords? grid row col)
+     (get-in grid [row col]))))
 
 (defn coords
   [cell]
