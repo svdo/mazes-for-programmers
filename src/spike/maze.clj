@@ -18,6 +18,6 @@
                    (-> (grid/create size size)
                        ;; binary-tree/carve
                        sidewinder/carve
-                       (dijkstra/assign-distances 10 10)
+                       (dijkstra/assign-distances 0 0)
                        (box/to-str (comp str :distance))))
      (read-line))))
