@@ -116,5 +116,19 @@
       (dijkstra/assign-distances 0 0)
       (dijkstra/neighbor-with-lowest-distance [1 1]))
   
-  (sort-by :distance #{{:distance 1} {:distance 5} {:distance 2}})
+  (require '[spike.generate.sidewinder :as sidewinder])
+  (def sample-grid (-> (grid/create 10 10)
+                       sidewinder/carve))
+  (print (-> sample-grid
+             (dijkstra/assign-distances 0 0)
+             (ascii/to-str  (comp str :dijkstra/distance))))
+  (-> sample-grid
+       (dijkstra/assign-distances 0 0)
+       flatten
+       ((partial sort-by :dijkstra/distance))
+       last)
+  
+  (let [{:keys [from to distances]} (dijkstra/find-longest-path sample-grid)]
+    (print (-> (dijkstra/mark-shortest-path distances from to)
+               (ascii/to-str #(if (:dijkstra/on-shortest-path %) "X" " ")))))
   )

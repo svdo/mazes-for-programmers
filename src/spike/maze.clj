@@ -12,13 +12,11 @@
   [size-str & _]
   (let [size (read-string size-str)
         term (t/get-terminal :unix)
-        from [(quot size 2) (quot size 2)]
-        to   [(dec size) (dec size)]
-        grid (-> (grid/create size size)
-                 ;; binary-tree/carve
-                 sidewinder/carve
-                 (dijkstra/assign-distances from)
-                 (dijkstra/mark-shortest-path from to))]
+        {:keys [from to distances]} (-> (grid/create size size)
+                                        ;; binary-tree/carve
+                                        sidewinder/carve
+                                        dijkstra/find-longest-path)
+        grid (dijkstra/mark-shortest-path distances from to)]
     (t/in-terminal
      term
      (t/put-string term (box/to-str grid (comp str :dijkstra/distance)))
