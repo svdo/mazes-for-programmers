@@ -11,13 +11,14 @@
 (defn -main
   [size-str & _]
   (let [size (read-string size-str)
-        term (t/get-terminal :unix)]
+        term (t/get-terminal :unix)
+        grid (-> (grid/create size size)
+                 ;; binary-tree/carve
+                 sidewinder/carve
+                 (dijkstra/assign-distances 0 0)
+                 (dijkstra/mark-shortest-path [0 0] [(dec size) (dec size)]))]
     (t/in-terminal
      term
-     (t/put-string term
-                   (-> (grid/create size size)
-                       ;; binary-tree/carve
-                       sidewinder/carve
-                       (dijkstra/assign-distances 0 0)
-                       (box/to-str (comp str :dijkstra/distance))))
+     (t/put-string term (box/to-str grid (comp str :dijkstra/distance)))
+     (t/put-string term (box/to-str grid #(if (:dijkstra/on-shortest-path %) "X" " ")))
      (read-line))))

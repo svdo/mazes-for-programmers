@@ -1,6 +1,7 @@
 (ns spike.solve.dijkstra
   (:require [clojure.set :as set]
-            [spike.grid :as grid]))
+            [spike.grid :as grid]
+            [spike.render.ascii]))
 
 (defn has-distance? [cell]
   (some? (:dijkstra/distance cell)))
@@ -34,4 +35,26 @@
     (if (empty? frontier)
       grid
       (let [[updated-grid new-frontier] (assign-distances-to-frontier grid frontier distance)]
-        (recur  updated-grid new-frontier (inc distance))))))
+        (recur updated-grid new-frontier (inc distance))))))
+
+(defn neighbor-with-lowest-distance [grid [row col] max-distance]
+  ;; (print (spike.render.ascii/to-str grid (comp str :dijkstra/distance)) )
+  ;; (println "Find for " [row col] " lower than " max-distance)
+  (->> (grid/linked-cells grid row col)
+      ;;  (#(do (println "  " %) %))
+       (filter #(< (:dijkstra/distance %) max-distance))
+       (sort-by :dijkstra/distance)
+       first
+       grid/coords))
+
+(defn mark-shortest-path [grid
+                          from-coord
+                          [to-row to-col :as to-coord]]
+  (loop [curr to-coord
+         grid (assoc-in grid [to-row to-col :dijkstra/on-shortest-path] true)]
+    (if (= curr from-coord)
+      grid
+      (let [[row col] (neighbor-with-lowest-distance grid 
+                                                     curr
+                                                     (:dijkstra/distance (grid/get-cell grid curr)))]
+        (recur [row col] (assoc-in grid [row col :dijkstra/on-shortest-path] true))))))
