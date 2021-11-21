@@ -13,3 +13,5 @@
 .clj-kondo
 .lsp
 node_modules
+.shadow-cljs
+js

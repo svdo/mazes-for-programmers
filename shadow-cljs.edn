@@ -1,9 +1,17 @@
 ;; shadow-cljs configuration
 {:source-paths
- ["src" "test"]
+ ["src" "test" "dev"]
 
  :dependencies
- []
+ [[lilactown/helix "0.1.5"]
+  [binaryage/devtools "0.9.7"]]
+
+ :dev-http {8888 "."}
 
  :builds
- {}}
+ {:app {:target :browser
+        :output-dir "js"
+        :asset-path "/js"
+        :modules {:app {:entries [maze.core]}}
+        :devtools {:preloads     [devtools.preload
+                                  maze.dev]}}}}
