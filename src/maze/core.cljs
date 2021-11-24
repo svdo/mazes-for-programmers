@@ -6,8 +6,7 @@
             [spike.generate.sidewinder :as sidewinder]
             [spike.grid :as grid]
             [spike.render.helix :refer [Grid]]
-            [spike.solve.dijkstra :as dijkstra]
-            [spike.render.ascii :as ascii]))
+            [spike.solve.dijkstra :as dijkstra]))
 
 (defnc App []
   (let [{:keys [from to distances]} (-> (grid/create 3 3)
