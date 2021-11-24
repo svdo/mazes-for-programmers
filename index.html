@@ -4,81 +4,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
       html { font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; }
-      #grid {
-        font-family: 'Courier New', Courier, monospace;
-        width: 200px;
-        height: 200px;
-        display: grid;
-        grid-template-rows: 4px 1fr 4px 1fr 4px 1fr 4px;
-        grid-template-columns: 4px 1fr 4px 1fr 4px 1fr 4px;
-      }
-      .border { background-color: black; }
-      .border.inner:hover { background-color: red; }
-      #grid > div {
-        min-width: 1px;
-      }
-      #grid .cell { display: grid; align-items: center; justify-content: center;}
     </style>
+    <link rel="stylesheet" href="/css/grid.css" />
     <script src="/js/app.js"></script>
   </head>
   <body>
-    <div id="grid">
-      <div class="border"></div>
-      <div class="border"></div>
-      <div class="border"></div>
-      <div class="border"></div>
-      <div class="border"></div>
-      <div class="border"></div>
-      <div class="border"></div>
-
-      <div class="border"></div>
-      <div class="cell">0</div>
-      <div class="border inner"></div>
-      <div class="cell">1</div>
-      <div class="border inner"></div>
-      <div class="cell">2</div>
-      <div class="border"></div>
-
-      <div class="border"></div>
-      <div class="border inner"></div>
-      <div class="border"></div>
-      <div class="border inner"></div>
-      <div class="border"></div>
-      <div class="border inner"></div>
-      <div class="border"></div>
-
-      <div class="border"></div>
-      <div class="cell">3</div>
-      <div class="border inner"></div>
-      <div class="cell">4</div>
-      <div class="border inner"></div>
-      <div class="cell">5</div>
-      <div class="border"></div>
-
-      <div class="border"></div>
-      <div class="border inner"></div>
-      <div class="border"></div>
-      <div class="border inner"></div>
-      <div class="border"></div>
-      <div class="border inner"></div>
-      <div class="border"></div>
-
-      <div class="border"></div>
-      <div class="cell">6</div>
-      <div class="border inner"></div>
-      <div class="cell">7</div>
-      <div class="border inner"></div>
-      <div class="cell">8</div>
-      <div class="border"></div>
-
-      <div class="border"></div>
-      <div class="border"></div>
-      <div class="border"></div>
-      <div class="border"></div>
-      <div class="border"></div>
-      <div class="border"></div>
-      <div class="border"></div>
-    </div>
     <div id="app"></div>
     <script>
 			maze.core.start();

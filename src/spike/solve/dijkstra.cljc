@@ -1,7 +1,6 @@
 (ns spike.solve.dijkstra
   (:require [clojure.set :as set]
-            [spike.grid :as grid]
-            [spike.render.ascii]))
+            [spike.grid :as grid]))
 
 (defn has-distance? [cell]
   (some? (:dijkstra/distance cell)))

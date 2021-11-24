@@ -1,0 +1,13 @@
+.grid {
+  font-family: 'Courier New', Courier, monospace;
+  display: grid;
+}
+.border { background-color: black; }
+.border:hover { background-color: red !important; }
+.border.first:hover { background-color: black !important; }
+.border.last:hover { background-color: black !important; }
+.border.open { background-color: transparent; }
+.grid > div {
+  min-width: 1px;
+}
+.grid .cell { display: grid; align-items: center; justify-content: center;}

@@ -1,4 +1,10 @@
-(ns spike.string-utils)
+(ns spike.string-utils
+  (:require
+   #?(:cljs [goog.string :as gstring]
+      [goog.string.format])))
+
+#?(:cljs 
+   (def format gstring/format))
 
 (defn center-string [width s]
   (let [s (if (>= width (count s)) s (subs s 0 width))
