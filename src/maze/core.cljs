@@ -11,9 +11,10 @@
 
 (defnc App []
   (let [[size set-size] (hooks/use-state 10)
+        [starting-point set-starting-point] (hooks/use-state [0 0])
         {:keys [from to distances]} (-> (grid/create size size)
                                         sidewinder/carve
-                                        dijkstra/find-longest-path)
+                                        (dijkstra/find-longest-path starting-point))
         grid (dijkstra/mark-shortest-path distances from to)]
     (<>
      (d/h1 "Maze" )
@@ -21,7 +22,9 @@
       (d/label {:for "size"} "Size:")
       (d/input {:id "size ":type "text" :value size :on-change #(set-size (min 30 (-> % .-target .-value)))}))
      ;; (d/pre (ascii/to-str grid (comp str :dijkstra/distance)))
-     ($ Grid {:grid grid :content-fn 
+     ($ Grid {:grid grid 
+              :set-starting-point set-starting-point
+              :content-fn
               #_(comp str :dijkstra/distance)
               #(if (:dijkstra/on-shortest-path %) (:dijkstra/distance %) " ")}))))
 

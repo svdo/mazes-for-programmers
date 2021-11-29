@@ -71,11 +71,14 @@
                   sorted)))
        rand-nth))
 
-(defn find-longest-path [grid]
-  (let [first-pass (assign-distances grid [0 0])
-        first-max (cell-with-highest-distance first-pass)
-        second-pass (assign-distances grid (grid/coords first-max))
-        second-max (cell-with-highest-distance second-pass)]
-    {:from (grid/coords first-max)
-     :to (grid/coords second-max)
-     :distances second-pass}))
+(defn find-longest-path
+  ([grid]
+   (let [first-pass (assign-distances grid [0 0])
+         first-max (cell-with-highest-distance first-pass)]
+     (find-longest-path grid (grid/coords first-max))))
+  ([grid starting-point]
+   (let [second-pass (assign-distances grid starting-point)
+         second-max (cell-with-highest-distance second-pass)]
+     {:from starting-point
+      :to (grid/coords second-max)
+      :distances second-pass})))

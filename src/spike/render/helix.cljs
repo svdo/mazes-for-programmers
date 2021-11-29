@@ -41,13 +41,14 @@
                                         :key (str "b-" (* 2 row) "-" (inc (* 2 col)))})])
                       (range 0 w))))))
 
-(defnc cells-row [{:keys [grid content-fn w row]}]
+(defnc cells-row [{:keys [grid content-fn w row set-starting-point]}]
   (<> (cons (d/div {:class-name "border vertical first"
                     :key (str "b-" (inc (* 2 row)) "-" -1)})
             (mapcat (fn [col]
                       (let [cell (grid/get-cell grid row col)]
                         [(d/div {:class-name "cell"
-                                 :key (str "c-" (inc (* 2 row)) "-" (* 2 col))}
+                                 :key (str "c-" (inc (* 2 row)) "-" (* 2 col))
+                                 :on-click #(set-starting-point [row col])}
                                 (content-fn cell))
                          (let [class-name (cond-> "border vertical"
                                             (= (dec w) col)
@@ -59,9 +60,9 @@
                                    :key (str "b-" (inc (* 2 row)) "-" (inc (* 2 col)))}))]))
                     (range 0 w)))))
 
-(defnc Grid [{grid :grid
-              content-fn :content-fn :or {content-fn (constantly " ")}}]
-  (let [w (grid/width grid)
+(defnc Grid [{:keys [grid set-starting-point content-fn] }]
+  (let [content-fn (or content-fn (constantly " "))
+        w (grid/width grid)
         h (grid/height grid)]
     (d/div
      {:class-name "grid"
@@ -71,6 +72,7 @@
               :height (* 50 h)}}
      ($ h-border {:grid grid :w w :h h :row -1})
      (<> (mapcat (fn [row]
-                   [($ cells-row {:key (str "row-" row) :grid grid :content-fn content-fn :w w :row row})
+                   [($ cells-row {:key (str "row-" row) :grid grid :content-fn content-fn :w w :row row
+                                  :set-starting-point set-starting-point})
                     ($ h-border {:key (str "h-border-" row) :grid grid :w w :h h :row row})])
                  (range 0 h))))))
