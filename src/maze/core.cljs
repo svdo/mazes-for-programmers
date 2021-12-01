@@ -35,25 +35,26 @@
                              {:red dark :green bright :blue dark :alpha 0.5}))}))))
 
 (defnc AnimatingDistancesMaze [{:keys [intermediates starting-point set-starting-point to show-colors max-distance on-animation-done]}]
-  (let [[animation-index set-animation-index] (hooks/use-state 0)
+  (let [[timer set-timer] (hooks/use-state nil)
+        [animation-index set-animation-index] (hooks/use-state 0)
         grid (nth intermediates animation-index)
         content-fn #(:dijkstra/distance %)]
-    (<>
-     (d/button {:on-click #(let [new-index (inc animation-index)]
-                             (if (> new-index max-distance)
-                               (on-animation-done)
-                               (set-animation-index new-index)))} ">>")
-     ($ Grid {:grid grid
-              :starting-point starting-point
-              :set-starting-point set-starting-point
-              :end-point to
-              :content-fn content-fn
-              :color-fn (when show-colors
-                          #(let [distance (:dijkstra/distance %)
-                                 intensity (- 1.0 (/ distance max-distance))
-                                 dark (* 255.0 intensity)
-                                 bright (+ 128.0 (* 127 intensity))]
-                             {:red dark :green bright :blue dark :alpha 0.5}))}))))
+    (hooks/use-effect
+     :once
+     (set-timer (js/setInterval (fn [] (set-animation-index #(if (>= % max-distance) 0 (inc %))))
+                                100))
+     #(js/clearInterval timer))
+    ($ Grid {:grid grid
+             :starting-point starting-point
+             :set-starting-point set-starting-point
+             :end-point to
+             :content-fn content-fn
+             :color-fn (when show-colors
+                         #(let [distance (:dijkstra/distance %)
+                                intensity (- 1.0 (/ distance max-distance))
+                                dark (* 255.0 intensity)
+                                bright (+ 128.0 (* 127 intensity))]
+                            {:red dark :green bright :blue dark :alpha 0.5}))})))
 
 (defnc Maze [{:keys [grid]}]
   (let [[starting-point set-starting-point] (hooks/use-state [0 0])
@@ -80,7 +81,8 @@
          :set-starting-point set-starting-point
          :to to
          :show-colors show-colors
-         :max-distance max-distance}))))
+         :max-distance max-distance
+         :on-animation-done #(set-animate false)}))))
 
 (defn str->int [s]
   (let [i (js/parseInt s)]
