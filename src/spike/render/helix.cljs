@@ -49,19 +49,24 @@
                                           :key (str "b-" (* 2 row) "-" (inc (* 2 col)))})]))
                       (range 0 w))))))
 
-(defnc cells-row [{:keys [grid content-fn w row set-starting-point color-fn]}]
+(defnc cells-row [{:keys [grid content-fn w row set-starting-point color-fn starting-point end-point]}]
   (<> (cons (d/div {:class-name "border vertical first"
                     :key (str "b-" (inc (* 2 row)) "-" -1)})
             (mapcat (fn [col]
                       (let [cell (grid/get-cell grid row col)
+                            coords [row col]
                             style (cond-> {}
                                     (some? color-fn)
-                                    (assoc :backgroundColor (color->rgba (color-fn cell))))]
+                                    (assoc :backgroundColor (color->rgba (color-fn cell))))
+                            content (content-fn cell)]
                         [(d/div {:class-name "cell"
                                  :key (str "c-" (inc (* 2 row)) "-" (* 2 col))
                                  :on-click #(set-starting-point [row col])
                                  :style style}
-                                (content-fn cell))
+                                (cond
+                                  (= coords starting-point) (d/span {:class-name "start"} content)
+                                  (= coords end-point)      (d/span {:class-name "finish"} content)
+                                  :else                     content))
                          (let [class-name (cond-> "border vertical"
                                             (= (dec w) col)
                                             (str " last")
@@ -74,7 +79,7 @@
                                    :style style}))]))
                     (range 0 w)))))
 
-(defnc Grid [{:keys [grid set-starting-point content-fn color-fn]}]
+(defnc Grid [{:keys [grid set-starting-point content-fn color-fn starting-point end-point]}]
   (let [content-fn (or content-fn (constantly " "))
         w (grid/width grid)
         h (grid/height grid)]
@@ -90,7 +95,9 @@
                                   :content-fn content-fn
                                   :color-fn color-fn
                                   :w w :row row
-                                  :set-starting-point set-starting-point})
+                                  :starting-point starting-point
+                                  :set-starting-point set-starting-point
+                                  :end-point end-point})
                     ($ h-border {:key (str "h-border-" row) :grid grid :w w :h h :row row
                                  :color-fn color-fn})])
                  (range 0 h))))))

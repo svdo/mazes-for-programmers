@@ -11,3 +11,18 @@
   min-width: 1px;
 }
 .grid .cell { display: grid; align-items: center; justify-content: center;}
+
+.cell .start, .cell .finish {
+  display: inline-flex;
+  border-radius: 15px;
+  width: 25px;
+  height: 25px;
+  justify-content: center;
+  align-items: center;
+}
+.cell .start {
+  border: 3px solid green;
+}
+.cell .finish {
+  border: 3px solid red;
+}

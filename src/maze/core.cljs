@@ -19,7 +19,9 @@
     (<>
      (d/button {:on-click #(set-show-colors (not show-colors))} "Toggle colors")
      ($ Grid {:grid grid
+              :starting-point starting-point
               :set-starting-point set-starting-point
+              :end-point to
               :content-fn
               #_(comp str :dijkstra/distance)
               #(if (:dijkstra/on-shortest-path %) (:dijkstra/distance %) " ")
