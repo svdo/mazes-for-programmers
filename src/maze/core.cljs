@@ -13,12 +13,18 @@
   (let [[starting-point set-starting-point] (hooks/use-state [0 0])
         {:keys [from to distances]} (-> grid
                                         (dijkstra/find-longest-path starting-point))
-        grid (dijkstra/mark-shortest-path distances from to)]
+        grid (dijkstra/mark-shortest-path distances from to)
+        max-distance (apply max (flatten (grid/map-cells :dijkstra/distance grid)))]
     ($ Grid {:grid grid
              :set-starting-point set-starting-point
              :content-fn
              #_(comp str :dijkstra/distance)
-             #(if (:dijkstra/on-shortest-path %) (:dijkstra/distance %) " ")})))
+             #(if (:dijkstra/on-shortest-path %) (:dijkstra/distance %) " ")
+             :color-fn #(let [distance (:dijkstra/distance %)
+                              intensity (- 1.0 (/ distance max-distance))
+                              dark (* 255.0 intensity)
+                              bright (+ 128.0 (* 127 intensity))]
+                          {:red dark :green bright :blue dark :alpha 0.5})})))
 
 (defnc App []
   (let [[size set-size] (hooks/use-state 10)
