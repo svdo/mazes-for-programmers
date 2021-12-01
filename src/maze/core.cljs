@@ -76,11 +76,10 @@
      (d/p 
       (d/label {:for "carve-algo" :style {:margin-right "0.5em"}} "Carve:")
       (d/select {:id "carve-algo"
+                 :value carve-algo
                  :on-change (fn [e] (set-carve-algo (-> e .-target .-value)))}
-                (d/option {:value "sidewinder"
-                           :selected (= carve-algo "sidewinder")} "Sidewinder")
-                (d/option {:value "binary-tree"
-                           :selected (= carve-algo "binary-tree")} "Binary tree")))
+                (d/option {:value "sidewinder"} "Sidewinder")
+                (d/option {:value "binary-tree"} "Binary tree")))
      ($ Maze {:grid grid}))))
 
 (defn ^:export start
