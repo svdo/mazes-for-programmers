@@ -66,7 +66,7 @@
     (<>
      (d/h1 "Maze")
      (d/p
-      (d/label {:for "size"} "Size:")
+      (d/label {:for "size" :style {:margin-right "0.5em"}} "Size:")
       (d/input {:id "size " :type "text" :value size :on-change #(when-let [new-size (-> % .-target .-value str->int)] (set-size (min 30 new-size)))}))
      ($ Maze {:grid grid}))))
 
