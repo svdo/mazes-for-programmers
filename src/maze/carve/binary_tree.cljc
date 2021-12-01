@@ -1,5 +1,5 @@
 (ns maze.carve.binary-tree
-  (:require [spike.grid :as grid]))
+  (:require [maze.grid :as grid]))
 
 (defn- carve-cell
   [cell]

@@ -1,5 +1,5 @@
 (ns maze.carve.sidewinder
-  (:require [spike.grid :as grid]))
+  (:require [maze.grid :as grid]))
 
 (defn- coin-flip
   []

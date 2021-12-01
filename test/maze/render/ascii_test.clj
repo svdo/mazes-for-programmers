@@ -1,6 +1,6 @@
 (ns maze.render.ascii-test
   (:require [clojure.test :refer [deftest testing is]]
-            [spike.grid :as grid]
+            [maze.grid :as grid]
             [maze.render.ascii :as ascii]))
 
 (deftest ascii-test

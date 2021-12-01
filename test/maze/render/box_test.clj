@@ -1,6 +1,6 @@
 (ns maze.render.box-test
   (:require [clojure.test :refer [deftest testing is]]
-            [spike.grid :as grid]
+            [maze.grid :as grid]
             [maze.render.box :as box]))
 
 (deftest box-test

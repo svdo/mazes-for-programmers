@@ -1,4 +1,4 @@
-(ns spike.grid)
+(ns maze.grid)
 
 (declare get-cell)
 (declare valid-coords)

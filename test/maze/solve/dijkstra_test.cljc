@@ -1,6 +1,6 @@
 (ns maze.solve.dijkstra-test
   (:require [clojure.test :refer [deftest is testing]]
-            [spike.grid :as grid]
+            [maze.grid :as grid]
             [maze.render.ascii :as ascii]
             [maze.solve.dijkstra :as dijkstra]))
 

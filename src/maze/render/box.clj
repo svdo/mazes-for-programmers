@@ -1,7 +1,7 @@
 (ns maze.render.box
   (:require [clojure.string :as s]
-            [spike.grid :refer [linked?]]
-            [spike.string-utils :refer [center-string]]))
+            [maze.grid :refer [linked?]]
+            [maze.string-utils :refer [center-string]]))
 
 (defn- cell->ascii->middle
   [content-fn cell]

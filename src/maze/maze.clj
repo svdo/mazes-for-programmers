@@ -1,6 +1,6 @@
-(ns spike.maze
+(ns maze.cli
   (:gen-class)
-  (:require [spike.grid :as grid]
+  (:require [maze.grid :as grid]
             [maze.carve.binary-tree :as binary-tree]
             [maze.carve.sidewinder :as sidewinder]
             [maze.render.ascii :as ascii]

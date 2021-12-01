@@ -6,7 +6,7 @@
             ["react-dom" :as rdom]
             [maze.carve.sidewinder :as sidewinder]
             [maze.carve.binary-tree :as binary-tree]
-            [spike.grid :as grid]
+            [maze.grid :as grid]
             [maze.render.helix :refer [Grid]]
             [maze.solve.dijkstra :as dijkstra]))
 

@@ -1,7 +1,7 @@
 (ns maze.render.ascii
-  (:require [spike.grid :as grid]
+  (:require [maze.grid :as grid]
             [clojure.string :as str]
-            [spike.string-utils :refer [center-string]]))
+            [maze.string-utils :refer [center-string]]))
 
 (defn- cell->ascii->middle
   [content-fn cell]

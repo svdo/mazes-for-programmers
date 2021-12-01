@@ -1,4 +1,4 @@
-(ns spike.string-utils
+(ns maze.string-utils
    #?(:cljs
      (:require [goog.string :as gstring]
                [goog.string.format])))

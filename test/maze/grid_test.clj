@@ -1,6 +1,6 @@
-(ns spike.grid-test
+(ns maze.grid-test
   (:require [clojure.test :refer [deftest testing is]]
-            [spike.grid :as grid]
+            [maze.grid :as grid]
             [maze.render.ascii :as ascii]))
 
 (def grid-10-10 (grid/create 10 10))

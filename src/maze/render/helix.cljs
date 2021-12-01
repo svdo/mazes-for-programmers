@@ -1,5 +1,5 @@
 (ns maze.render.helix
-  (:require [spike.grid :as grid]
+  (:require [maze.grid :as grid]
             [helix.core :refer [$ <>]]
             [helix.dom :as d]
             [maze.lib :refer [defnc]]

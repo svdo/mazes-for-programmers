@@ -3,7 +3,7 @@
  :deps {org.clojure/clojure               {:mvn/version "1.10.3"}
         clojure-lanterna/clojure-lanterna {:mvn/version "0.9.7"}}
  
- :aliases {:run {:main-opts ["-m" "spike.maze"]}
+ :aliases {:run {:main-opts ["-m" "maze.cli"]}
 
            :test {:extra-paths ["test"]
                   :extra-deps {org.clojure/test.check {:mvn/version "1.1.0"}}}

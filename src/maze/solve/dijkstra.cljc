@@ -1,6 +1,6 @@
 (ns maze.solve.dijkstra
   (:require [clojure.set :as set]
-            [spike.grid :as grid]))
+            [maze.grid :as grid]))
 
 (defn has-distance? [cell]
   (some? (:dijkstra/distance cell)))
