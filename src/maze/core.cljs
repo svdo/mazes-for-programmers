@@ -33,6 +33,10 @@
                                  bright (+ 128.0 (* 127 intensity))]
                              {:red dark :green bright :blue dark :alpha 0.5}))}))))
 
+(defn str->int [s]
+  (let [i (js/parseInt s)]
+    (when-not (js/isNaN i) i)))
+
 (defnc App []
   (let [[size set-size] (hooks/use-state 10)
         grid (-> (grid/create size size)
@@ -41,7 +45,7 @@
      (d/h1 "Maze")
      (d/p
       (d/label {:for "size"} "Size:")
-      (d/input {:id "size " :type "text" :value size :on-change #(set-size (min 30 (-> % .-target .-value)))}))
+      (d/input {:id "size " :type "text" :value size :on-change #(when-let [new-size (-> % .-target .-value str->int)] (set-size (min 30 new-size)))}))
      ($ Maze {:grid grid}))))
 
 (defn ^:export start
