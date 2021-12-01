@@ -69,7 +69,12 @@
            (-> grid2 
                (dijkstra/assign-distances-keep-intermediates 0 0)
                :intermediates
-               ((partial map (partial grid/map-cells :dijkstra/distance)))))))
+               ((partial map (partial grid/map-cells :dijkstra/distance))))))
+    (is (= [[0 1 4] [3 2 3] [4 5 6]]
+           (-> grid2
+               (dijkstra/assign-distances-keep-intermediates 0 0)
+               :grid
+               ((partial grid/map-cells :dijkstra/distance))))))
 
   (testing "shortest path"
     (is (= [[true true] [nil nil]]
