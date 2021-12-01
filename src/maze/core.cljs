@@ -5,6 +5,7 @@
             [maze.lib :refer [defnc]]
             ["react-dom" :as rdom]
             [spike.generate.sidewinder :as sidewinder]
+            [spike.generate.binary-tree :as binary-tree]
             [spike.grid :as grid]
             [spike.render.helix :refer [Grid]]
             [spike.solve.dijkstra :as dijkstra]))
@@ -61,13 +62,25 @@
 
 (defnc App []
   (let [[size set-size] (hooks/use-state 10)
+        [carve-algo set-carve-algo] (hooks/use-state "sidewinder")
+        _ (js/console.debug carve-algo)
         grid (-> (grid/create size size)
-                 sidewinder/carve)]
+                 ((case carve-algo
+                    "binary-tree" binary-tree/carve
+                    "sidewinder" sidewinder/carve)))]
     (<>
      (d/h1 "Maze")
      (d/p
       (d/label {:for "size" :style {:margin-right "0.5em"}} "Size:")
-      (d/input {:id "size " :type "text" :value size :on-change #(when-let [new-size (-> % .-target .-value str->int)] (set-size (min 30 new-size)))}))
+      (d/input {:id "size" :type "text" :value size :on-change #(when-let [new-size (-> % .-target .-value str->int)] (set-size (min 30 new-size)))}))
+     (d/p 
+      (d/label {:for "carve-algo" :style {:margin-right "0.5em"}} "Carve:")
+      (d/select {:id "carve-algo"
+                 :on-change (fn [e] (set-carve-algo (-> e .-target .-value)))}
+                (d/option {:value "sidewinder"
+                           :selected (= carve-algo "sidewinder")} "Sidewinder")
+                (d/option {:value "binary-tree"
+                           :selected (= carve-algo "binary-tree")} "Binary tree")))
      ($ Maze {:grid grid}))))
 
 (defn ^:export start
