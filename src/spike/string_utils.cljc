@@ -1,7 +1,7 @@
 (ns spike.string-utils
-  (:require
-   #?(:cljs [goog.string :as gstring]
-      [goog.string.format])))
+   #?(:cljs
+     (:require [goog.string :as gstring]
+               [goog.string.format])))
 
 #?(:cljs 
    (def format gstring/format))
