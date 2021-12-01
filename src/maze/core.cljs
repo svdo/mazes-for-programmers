@@ -4,11 +4,11 @@
             [helix.hooks :as hooks]
             [maze.lib :refer [defnc]]
             ["react-dom" :as rdom]
-            [spike.generate.sidewinder :as sidewinder]
-            [spike.generate.binary-tree :as binary-tree]
+            [maze.carve.sidewinder :as sidewinder]
+            [maze.carve.binary-tree :as binary-tree]
             [spike.grid :as grid]
-            [spike.render.helix :refer [Grid]]
-            [spike.solve.dijkstra :as dijkstra]))
+            [maze.render.helix :refer [Grid]]
+            [maze.solve.dijkstra :as dijkstra]))
 
 (defnc Maze [{:keys [grid]}]
   (let [[starting-point set-starting-point] (hooks/use-state [0 0])

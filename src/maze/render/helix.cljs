@@ -1,4 +1,4 @@
-(ns spike.render.helix
+(ns maze.render.helix
   (:require [spike.grid :as grid]
             [helix.core :refer [$ <>]]
             [helix.dom :as d]

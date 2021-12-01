@@ -1,7 +1,7 @@
-(ns spike.render.box-test
+(ns maze.render.box-test
   (:require [clojure.test :refer [deftest testing is]]
             [spike.grid :as grid]
-            [spike.render.box :as box]))
+            [maze.render.box :as box]))
 
 (deftest box-test
   (testing "to box"

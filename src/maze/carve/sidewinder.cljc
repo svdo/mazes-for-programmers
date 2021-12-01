@@ -1,4 +1,4 @@
-(ns spike.generate.sidewinder
+(ns maze.carve.sidewinder
   (:require [spike.grid :as grid]))
 
 (defn- coin-flip

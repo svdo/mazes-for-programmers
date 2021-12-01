@@ -14,4 +14,7 @@
         :asset-path "/js"
         :modules {:app {:entries [maze.core]}}
         :devtools {:preloads     [devtools.preload
-                                  maze.dev]}}}}
+                                  maze.dev]}}
+  :test {:target :node-test
+         :output-to "js/node-test.js"
+         :autorun true}}}

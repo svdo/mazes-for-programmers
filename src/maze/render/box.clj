@@ -1,4 +1,4 @@
-(ns spike.render.box
+(ns maze.render.box
   (:require [clojure.string :as s]
             [spike.grid :refer [linked?]]
             [spike.string-utils :refer [center-string]]))

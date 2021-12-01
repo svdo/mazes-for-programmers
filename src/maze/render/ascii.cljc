@@ -1,4 +1,4 @@
-(ns spike.render.ascii
+(ns maze.render.ascii
   (:require [spike.grid :as grid]
             [clojure.string :as str]
             [spike.string-utils :refer [center-string]]))

@@ -1,7 +1,7 @@
-(ns spike.generate.binary-tree-test
+(ns maze.carve.binary-tree-test
   (:require [clojure.test :refer [deftest testing is]]
             [spike.grid :as grid]
-            [spike.generate.binary-tree :as binary-tree]))
+            [maze.carve.binary-tree :as binary-tree]))
 
 (deftest binary-tree
   (testing "carve using binary tree"

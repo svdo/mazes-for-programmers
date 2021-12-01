@@ -1,11 +1,11 @@
 (ns spike.maze
   (:gen-class)
   (:require [spike.grid :as grid]
-            [spike.generate.binary-tree :as binary-tree]
-            [spike.generate.sidewinder :as sidewinder]
-            [spike.render.ascii :as ascii]
-            [spike.render.box :as box]
-            [spike.solve.dijkstra :as dijkstra]
+            [maze.carve.binary-tree :as binary-tree]
+            [maze.carve.sidewinder :as sidewinder]
+            [maze.render.ascii :as ascii]
+            [maze.render.box :as box]
+            [maze.solve.dijkstra :as dijkstra]
             [lanterna.terminal :as t]))
 
 (defn -main

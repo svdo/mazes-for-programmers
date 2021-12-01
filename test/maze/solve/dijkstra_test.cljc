@@ -1,8 +1,8 @@
-(ns spike.solve.dijkstra-test
+(ns maze.solve.dijkstra-test
   (:require [clojure.test :refer [deftest is testing]]
             [spike.grid :as grid]
-            [spike.render.ascii :as ascii]
-            [spike.solve.dijkstra :as dijkstra]))
+            [maze.render.ascii :as ascii]
+            [maze.solve.dijkstra :as dijkstra]))
 
 (def grid1
   (-> (grid/create 2 2)
@@ -134,7 +134,7 @@
         (ascii/to-str (comp str :dijkstra/distance))
         print))
     
-  (require '[spike.generate.sidewinder :as sidewinder])
+  (require '[maze.carve.sidewinder :as sidewinder])
   (def sample-grid (-> (grid/create 10 10)
                        sidewinder/carve))
   (print (-> sample-grid

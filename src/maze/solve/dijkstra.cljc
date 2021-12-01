@@ -1,4 +1,4 @@
-(ns spike.solve.dijkstra
+(ns maze.solve.dijkstra
   (:require [clojure.set :as set]
             [spike.grid :as grid]))
 
@@ -13,7 +13,7 @@
 
 (defn assign-distances-to-linked-cells [next-distance [grid new-frontier] cell]
   ;; (println "---------- [" next-distance "]")
-  ;; (print (spike.render.ascii/to-str grid (comp str :dijkstra/distance)) )
+  ;; (print (maze.render.ascii/to-str grid (comp str :dijkstra/distance)) )
   ;; (println "cur cell:" (grid/coords cell))
   (let [linked (grid/linked-cells grid (:row cell) (:col cell))
         next-frontier (-> new-frontier
@@ -56,7 +56,7 @@
                 (conj intermediates updated-grid)))))))
 
 (defn neighbor-with-lowest-distance [grid [row col] max-distance]
-  ;; (print (spike.render.ascii/to-str grid (comp str :dijkstra/distance)) )
+  ;; (print (maze.render.ascii/to-str grid (comp str :dijkstra/distance)) )
   ;; (println "Find for " [row col] " lower than " max-distance)
   (->> (grid/linked-cells grid row col)
       ;;  (#(do (println "  " %) %))

@@ -1,7 +1,7 @@
-(ns spike.generate.sidewinder-test
+(ns maze.carve.sidewinder-test
   (:require [clojure.test :refer [deftest testing is]]
             [spike.grid :as grid]
-            [spike.generate.sidewinder :as sidewinder]))
+            [maze.carve.sidewinder :as sidewinder]))
 
 (deftest sidewinder
   (testing "carve using sidewinder"

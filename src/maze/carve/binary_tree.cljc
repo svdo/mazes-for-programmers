@@ -1,4 +1,4 @@
-(ns spike.generate.binary-tree
+(ns maze.carve.binary-tree
   (:require [spike.grid :as grid]))
 
 (defn- carve-cell
