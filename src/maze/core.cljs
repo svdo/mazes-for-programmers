@@ -19,8 +19,20 @@
         grid (dijkstra/mark-shortest-path distances from to)
         max-distance (apply max (flatten (grid/map-cells :dijkstra/distance grid)))]
     (<>
-     (d/button {:on-click #(set-show-colors (not show-colors))} "Toggle colors")
-     (d/button {:on-click #(set-show-distances (not show-distances))} "Toggle distances")
+     (d/span {:display "inline-block"
+              :style {:margin-right "1em"}}
+             (d/input {:id "show-colors"
+                       :type "checkbox"
+                       :checked show-colors
+                       :on-change #(set-show-colors (not show-colors))})
+             (d/label {:for "show-colors"} "show colors"))
+     (d/span {:display "inline-block"
+              :style {:margin-right "1em"}}
+             (d/input {:id "show-distances"
+                       :type "checkbox"
+                       :checked show-distances
+                       :on-change #(set-show-distances (not show-distances))})
+             (d/label {:for "show-distances"} "show distances"))
      (d/button {:on-click #(set-animation-index (if (nil? animation-index) 0 nil))} "Toggle animate")
      (when-not (nil? animation-index)
        (d/button {:on-click #(let [new-index ((fnil inc -1) animation-index)
