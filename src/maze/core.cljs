@@ -10,11 +10,55 @@
             [maze.render.helix :refer [Grid]]
             [maze.solve.dijkstra :as dijkstra]))
 
+(defnc LongestPathMaze [{:keys [grid starting-point set-starting-point to show-colors max-distance]}]
+  (let [[show-distances set-show-distances] (hooks/use-state false)
+        content-fn (when show-distances
+                     #(if (:dijkstra/on-shortest-path %) (:dijkstra/distance %) " "))]
+    (<>
+     (d/span {:display "inline-block"
+              :style {:margin-left "1em"}}
+             (d/input {:id "show-distances"
+                       :type "checkbox"
+                       :checked show-distances
+                       :on-change #(set-show-distances (not show-distances))})
+             (d/label {:for "show-distances"} "show distances"))
+     ($ Grid {:grid grid
+              :starting-point starting-point
+              :set-starting-point set-starting-point
+              :end-point to
+              :content-fn content-fn
+              :color-fn (when show-colors
+                          #(let [distance (:dijkstra/distance %)
+                                 intensity (- 1.0 (/ distance max-distance))
+                                 dark (* 255.0 intensity)
+                                 bright (+ 128.0 (* 127 intensity))]
+                             {:red dark :green bright :blue dark :alpha 0.5}))}))))
+
+(defnc AnimatingDistancesMaze [{:keys [intermediates starting-point set-starting-point to show-colors max-distance on-animation-done]}]
+  (let [[animation-index set-animation-index] (hooks/use-state 0)
+        grid (nth intermediates animation-index)
+        content-fn #(:dijkstra/distance %)]
+    (<>
+     (d/button {:on-click #(let [new-index (inc animation-index)]
+                             (if (> new-index max-distance)
+                               (on-animation-done)
+                               (set-animation-index new-index)))} ">>")
+     ($ Grid {:grid grid
+              :starting-point starting-point
+              :set-starting-point set-starting-point
+              :end-point to
+              :content-fn content-fn
+              :color-fn (when show-colors
+                          #(let [distance (:dijkstra/distance %)
+                                 intensity (- 1.0 (/ distance max-distance))
+                                 dark (* 255.0 intensity)
+                                 bright (+ 128.0 (* 127 intensity))]
+                             {:red dark :green bright :blue dark :alpha 0.5}))}))))
+
 (defnc Maze [{:keys [grid]}]
   (let [[starting-point set-starting-point] (hooks/use-state [0 0])
         [show-colors set-show-colors] (hooks/use-state false)
-        [show-distances set-show-distances] (hooks/use-state false)
-        [animation-index set-animation-index] (hooks/use-state nil)
+        [animate set-animate] (hooks/use-state false)
         {:keys [from to distances intermediates]} (-> grid
                                                       (dijkstra/find-longest-path-keep-dinstances starting-point))
         grid (dijkstra/mark-shortest-path distances from to)
@@ -27,34 +71,16 @@
                        :checked show-colors
                        :on-change #(set-show-colors (not show-colors))})
              (d/label {:for "show-colors"} "show colors"))
-     (d/span {:display "inline-block"
-              :style {:margin-right "1em"}}
-             (d/input {:id "show-distances"
-                       :type "checkbox"
-                       :checked show-distances
-                       :on-change #(set-show-distances (not show-distances))})
-             (d/label {:for "show-distances"} "show distances"))
-     (d/button {:on-click #(set-animation-index (if (nil? animation-index) 0 nil))} (if (nil? animation-index) "Start animate" "Stop animate"))
-     (when-not (nil? animation-index)
-       (d/button {:on-click #(let [new-index ((fnil inc -1) animation-index)
-                                   new-index (when (<= new-index max-distance) new-index)]
-                               (set-animation-index new-index))} ">>"))
-     (let [grid (if (nil? animation-index) grid (nth intermediates animation-index))
-           normal-content-fn (when show-distances
-                               #(if (:dijkstra/on-shortest-path %) (:dijkstra/distance %) " "))
-           animating-content-fn #(:dijkstra/distance %)
-           content-fn (if (nil? animation-index) normal-content-fn animating-content-fn)]
-       ($ Grid {:grid grid
-                :starting-point starting-point
-                :set-starting-point set-starting-point
-                :end-point to
-                :content-fn content-fn
-                :color-fn (when show-colors
-                            #(let [distance (:dijkstra/distance %)
-                                   intensity (- 1.0 (/ distance max-distance))
-                                   dark (* 255.0 intensity)
-                                   bright (+ 128.0 (* 127 intensity))]
-                               {:red dark :green bright :blue dark :alpha 0.5}))})))))
+     (d/button {:on-click #(set-animate (not animate))}
+               (if animate "Stop animate" "Start animate"))
+     ($ (if animate AnimatingDistancesMaze LongestPathMaze)
+        {:grid grid
+         :intermediates intermediates
+         :starting-point starting-point
+         :set-starting-point set-starting-point
+         :to to
+         :show-colors show-colors
+         :max-distance max-distance}))))
 
 (defn str->int [s]
   (let [i (js/parseInt s)]
