@@ -39,6 +39,22 @@
        (let [[updated-grid new-frontier] (assign-distances-to-frontier grid frontier distance)]
          (recur updated-grid new-frontier (inc distance)))))))
 
+(defn assign-distances-keep-intermediates
+  ([grid [row col]]
+   (assign-distances-keep-intermediates grid row col))
+  ([grid row col]
+   (loop [grid     (assoc-in grid [row col :dijkstra/distance] 0)
+          frontier #{(grid/get-cell grid row col)}
+          distance 1
+          intermediates [grid]]
+     (if (empty? frontier)
+       {:grid grid :intermediates (butlast intermediates)}
+       (let [[updated-grid new-frontier] (assign-distances-to-frontier grid frontier distance)]
+         (recur updated-grid
+                new-frontier
+                (inc distance)
+                (conj intermediates updated-grid)))))))
+
 (defn neighbor-with-lowest-distance [grid [row col] max-distance]
   ;; (print (spike.render.ascii/to-str grid (comp str :dijkstra/distance)) )
   ;; (println "Find for " [row col] " lower than " max-distance)
@@ -82,3 +98,14 @@
      {:from starting-point
       :to (grid/coords second-max)
       :distances second-pass})))
+
+(defn find-longest-path-keep-dinstances
+  [grid starting-point]
+  (let [_ (tap> (assign-distances-keep-intermediates grid starting-point))
+        {:keys [grid intermediates]} (assign-distances-keep-intermediates grid starting-point)
+        second-max (cell-with-highest-distance grid)]
+    {:from starting-point
+     :to (grid/coords second-max)
+     :distances grid
+     :intermediates intermediates})
+  )

@@ -46,11 +46,30 @@
                  (grid/get-cell 0 0)
                  :dijkstra/distance))))
 
-  (testing "grid1"
+  (testing "grid1 distances"
     (is (= [[0 1] [nil nil]]
            (-> grid1
                (dijkstra/assign-distances 0 0)
                ((partial grid/map-cells :dijkstra/distance))))))
+  
+  (testing "grid2 distances"
+    (is (= [[0 1 4] [3 2 3] [4 5 6]]
+           (-> grid2
+               (dijkstra/assign-distances 0 0)
+               ((partial grid/map-cells :dijkstra/distance))))))
+  
+  (testing "grid2 with intermediates"
+    (is (= [[[0 nil nil] [nil nil nil] [nil nil nil]]
+            [[0 1 nil] [nil nil nil] [nil nil nil]]
+            [[0 1 nil] [nil 2 nil] [nil nil nil]]
+            [[0 1 nil] [3 2 3] [nil nil nil]]
+            [[0 1 4] [3 2 3] [4 nil nil]]
+            [[0 1 4] [3 2 3] [4 5 nil]]
+            [[0 1 4] [3 2 3] [4 5 6]]]
+           (-> grid2 
+               (dijkstra/assign-distances-keep-intermediates 0 0)
+               :intermediates
+               ((partial map (partial grid/map-cells :dijkstra/distance)))))))
 
   (testing "shortest path"
     (is (= [[true true] [nil nil]]
