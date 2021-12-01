@@ -33,7 +33,7 @@
                        :checked show-distances
                        :on-change #(set-show-distances (not show-distances))})
              (d/label {:for "show-distances"} "show distances"))
-     (d/button {:on-click #(set-animation-index (if (nil? animation-index) 0 nil))} "Toggle animate")
+     (d/button {:on-click #(set-animation-index (if (nil? animation-index) 0 nil))} (if (nil? animation-index) "Start animate" "Stop animate"))
      (when-not (nil? animation-index)
        (d/button {:on-click #(let [new-index ((fnil inc -1) animation-index)
                                    new-index (when (<= new-index max-distance) new-index)]
