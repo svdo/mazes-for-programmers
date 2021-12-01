@@ -12,19 +12,20 @@
 (defnc Maze [{:keys [grid]}]
   (let [[starting-point set-starting-point] (hooks/use-state [0 0])
         [show-colors set-show-colors] (hooks/use-state false)
+        [show-distances set-show-distances] (hooks/use-state false)
         {:keys [from to distances]} (-> grid
                                         (dijkstra/find-longest-path starting-point))
         grid (dijkstra/mark-shortest-path distances from to)
         max-distance (apply max (flatten (grid/map-cells :dijkstra/distance grid)))]
     (<>
      (d/button {:on-click #(set-show-colors (not show-colors))} "Toggle colors")
+     (d/button {:on-click #(set-show-distances (not show-distances))} "Toggle distances")
      ($ Grid {:grid grid
               :starting-point starting-point
               :set-starting-point set-starting-point
               :end-point to
-              :content-fn
-              #_(comp str :dijkstra/distance)
-              #(if (:dijkstra/on-shortest-path %) (:dijkstra/distance %) " ")
+              :content-fn (when show-distances
+                            #(if (:dijkstra/on-shortest-path %) (:dijkstra/distance %) " "))
               :color-fn (when show-colors
                           #(let [distance (:dijkstra/distance %)
                                  intensity (- 1.0 (/ distance max-distance))
