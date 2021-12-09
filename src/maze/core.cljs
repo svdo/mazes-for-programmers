@@ -11,6 +11,13 @@
             [maze.render.helix :refer [Grid]]
             [maze.solve.dijkstra :as dijkstra]))
 
+(defn- green-color-fn [max-distance cell]
+  (let [distance (:dijkstra/distance cell)
+         intensity (- 1.0 (/ distance max-distance))
+         dark (* 255.0 intensity)
+         bright (+ 128.0 (* 127 intensity))]
+     {:red dark :green bright :blue dark :alpha 0.7}))
+
 (defnc LongestPathMaze [{:keys [grid starting-point set-starting-point to show-colors max-distance]}]
   (let [[show-distances set-show-distances] (hooks/use-state false)
         content-fn (when show-distances
@@ -28,12 +35,7 @@
               :set-starting-point set-starting-point
               :end-point to
               :content-fn content-fn
-              :color-fn (when show-colors
-                          #(let [distance (:dijkstra/distance %)
-                                 intensity (- 1.0 (/ distance max-distance))
-                                 dark (* 255.0 intensity)
-                                 bright (+ 128.0 (* 127 intensity))]
-                             {:red dark :green bright :blue dark :alpha 0.5}))}))))
+              :color-fn (when show-colors (partial green-color-fn max-distance))}))))
 
 (defnc AnimatingDistancesMaze [{:keys [intermediates starting-point set-starting-point to show-colors max-distance on-animation-done]}]
   (let [[animation-index set-animation-index] (hooks/use-state 0)
@@ -45,12 +47,7 @@
              :set-starting-point set-starting-point
              :end-point to
              :content-fn content-fn
-             :color-fn (when show-colors
-                         #(let [distance (:dijkstra/distance %)
-                                intensity (- 1.0 (/ distance max-distance))
-                                dark (* 255.0 intensity)
-                                bright (+ 128.0 (* 127 intensity))]
-                            {:red dark :green bright :blue dark :alpha 0.5}))})))
+             :color-fn (when show-colors (partial green-color-fn max-distance))})))
 
 (defnc Maze [{:keys [grid]}]
   (let [[starting-point set-starting-point] (hooks/use-state [0 0])
