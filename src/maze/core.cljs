@@ -91,32 +91,51 @@
          "aldous-broder" aldous-broder/carve
          "wilson" wilson/carve))))
 
+(defn- init-grid [{:keys [size carve-algo]}]
+  {:size size
+   :carve-algo carve-algo
+   :grid (create-grid size carve-algo)})
+
+(defn app-reducer [state action]
+  (case (:type action)
+    :set-size (-> state
+                  (assoc :size (:payload action))
+                  init-grid)
+    :set-carve-algo (-> state
+                        (assoc :carve-algo (:payload action))
+                        init-grid)
+    :refresh (init-grid state)
+    state))
+
 (defnc App []
-  (let [[size set-size] (hooks/use-state 15)
-        [carve-algo set-carve-algo] (hooks/use-state "wilson")
-        [grid set-grid] (hooks/use-state (create-grid size carve-algo))]
-    (hooks/use-effect
-     [size carve-algo]
-     (set-grid (create-grid size carve-algo)))
+  (let [[state dispatch] (hooks/use-reducer app-reducer
+                                            {:size 15 :carve-algo "wilson"}
+                                            init-grid)]
     (<>
      (d/h1 "Maze")
 
      (d/p
       (d/label {:for "size" :style {:margin-right "0.5em"}} "Size:")
-      (d/input {:id "size" :type "text" :value size :on-change #(when-let [new-size (-> % .-target .-value str->int)] (set-size (min 30 new-size)))})
-      (d/button {:on-click #(set-grid (create-grid size carve-algo))} "↺"))
+      (d/input {:id "size" :type "text"
+                :value (:size state)
+                :on-change #(when-let [new-size (-> % .-target .-value str->int)] 
+                              (dispatch {:type :set-size :payload (min 30 new-size)}))})
+      (d/button {:on-click #(dispatch {:type :refresh})} "↺"))
      
      (d/p 
       (d/label {:for "carve-algo" :style {:margin-right "0.5em"}} "Carve:")
       (d/select {:id "carve-algo"
-                 :value carve-algo
-                 :on-change (fn [e] (set-carve-algo (-> e .-target .-value)))}
+                 :value (:carve-algo state)
+                 :on-change (fn [e]
+                              (js/console.debug "set-carve-algo" (-> e .-target .-value))
+                              (dispatch {:type :set-carve-algo
+                                         :payload (-> e .-target .-value)}))}
                 (d/option {:value "aldous-broder"} "Aldous-Broder")
                 (d/option {:value "wilson"} "Wilson's")
                 (d/option {:value "sidewinder"} "Sidewinder")
                 (d/option {:value "binary-tree"} "Binary tree")))
      
-     ($ Maze {:grid grid}))))
+     ($ Maze {:grid (:grid state)}))))
 
 (defn ^:export start
   []
