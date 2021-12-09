@@ -65,6 +65,12 @@
   (= (coords cell1)
      (coords cell2)))
 
+(defn random-neighbor-coordinate [cell]
+  (->> cell
+       ((juxt :north :south :east :west))
+       (filter some?)
+       rand-nth))
+
 (defn link-cells
   [grid [row1 col1] [row2 col2]]
   (-> grid
