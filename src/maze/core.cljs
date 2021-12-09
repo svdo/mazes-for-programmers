@@ -9,7 +9,8 @@
             [maze.carve.binary-tree :as binary-tree]
             [maze.grid :as grid]
             [maze.render.helix :refer [Grid]]
-            [maze.solve.dijkstra :as dijkstra]))
+            [maze.solve.dijkstra :as dijkstra]
+            [maze.carve.aldous-broder :as aldous-broder]))
 
 (defn- green-color-fn [max-distance cell]
   (let [distance (:dijkstra/distance cell)
@@ -51,7 +52,7 @@
 
 (defnc Maze [{:keys [grid]}]
   (let [[starting-point set-starting-point] (hooks/use-state [0 0])
-        [show-colors set-show-colors] (hooks/use-state false)
+        [show-colors set-show-colors] (hooks/use-state true)
         [animate set-animate] (hooks/use-state false)
         {:keys [from to distances intermediates]} (-> grid
                                                       (dijkstra/find-longest-path-keep-dinstances starting-point))
@@ -82,13 +83,14 @@
     (when-not (js/isNaN i) i)))
 
 (defnc App []
-  (let [[size set-size] (hooks/use-state 10)
-        [carve-algo set-carve-algo] (hooks/use-state "sidewinder")
+  (let [[size set-size] (hooks/use-state 15)
+        [carve-algo set-carve-algo] (hooks/use-state "aldous-broder")
         _ (js/console.debug carve-algo)
         grid (-> (grid/create size size)
                  ((case carve-algo
                     "binary-tree" binary-tree/carve
-                    "sidewinder" sidewinder/carve)))]
+                    "sidewinder" sidewinder/carve
+                    "aldous-broder" aldous-broder/carve)))]
     (<>
      (d/h1 "Maze")
      (d/p
@@ -99,6 +101,7 @@
       (d/select {:id "carve-algo"
                  :value carve-algo
                  :on-change (fn [e] (set-carve-algo (-> e .-target .-value)))}
+                (d/option {:value "aldous-broder"} "Aldous-Broder")
                 (d/option {:value "sidewinder"} "Sidewinder")
                 (d/option {:value "binary-tree"} "Binary tree")))
      ($ Maze {:grid grid}))))

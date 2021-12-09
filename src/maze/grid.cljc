@@ -34,6 +34,10 @@
   [grid]
   (count (first grid)))
 
+(defn size 
+  [grid]
+  (* (height grid) (width grid)))
+
 (defn- valid-coords?
   [grid row col]
   (and (>= (dec (height grid)) row 0)
@@ -49,6 +53,9 @@
   ([grid row col]
    (when (valid-coords? grid row col)
      (get-in grid [row col]))))
+
+(defn random-cell [grid]
+  (get-cell grid (rand-int (height grid)) (rand-int (width grid))))
 
 (defn coords
   [cell]
@@ -71,9 +78,12 @@
   (and (some? cell)
        (some? ((:links cell) (direction cell)))))
 
-(defn linked-cells [grid row col]
-  (set (map (partial apply get-cell grid)
-            (:links (get-cell grid row col)))))
+(defn linked-cells
+  ([grid [row col]]
+   (linked-cells grid row col))
+  ([grid row col]
+   (set (map (partial apply get-cell grid)
+             (:links (get-cell grid row col))))))
 
 (defn map-cells
   [f grid]

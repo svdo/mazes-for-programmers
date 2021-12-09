@@ -29,7 +29,8 @@
 (deftest grid-test
   (testing "create a new grid"
     (is (= 20 (-> (grid/create 30 20) grid/height)))
-    (is (= 30 (-> (grid/create 30 20) grid/width))))
+    (is (= 30 (-> (grid/create 30 20) grid/width)))
+    (is (= 600 (-> (grid/create 30 20) grid/size))))
 
   (testing "getting cells"
     (is (not (nil? (-> grid-10-10 (grid/get-cell 0 0)))))
