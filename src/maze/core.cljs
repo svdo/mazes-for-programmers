@@ -82,20 +82,27 @@
   (let [i (js/parseInt s)]
     (when-not (js/isNaN i) i)))
 
+(defn create-grid [size carve-algo]
+  (-> (grid/create size size)
+      ((case carve-algo
+         "binary-tree" binary-tree/carve
+         "sidewinder" sidewinder/carve
+         "aldous-broder" aldous-broder/carve))))
+
 (defnc App []
   (let [[size set-size] (hooks/use-state 15)
         [carve-algo set-carve-algo] (hooks/use-state "aldous-broder")
-        _ (js/console.debug carve-algo)
-        grid (-> (grid/create size size)
-                 ((case carve-algo
-                    "binary-tree" binary-tree/carve
-                    "sidewinder" sidewinder/carve
-                    "aldous-broder" aldous-broder/carve)))]
+        [grid set-grid] (hooks/use-state (create-grid size carve-algo))]
+    (hooks/use-effect
+     [size carve-algo]
+     (set-grid (create-grid size carve-algo)))
     (<>
      (d/h1 "Maze")
      (d/p
       (d/label {:for "size" :style {:margin-right "0.5em"}} "Size:")
-      (d/input {:id "size" :type "text" :value size :on-change #(when-let [new-size (-> % .-target .-value str->int)] (set-size (min 30 new-size)))}))
+      (d/input {:id "size" :type "text" :value size :on-change #(when-let [new-size (-> % .-target .-value str->int)] (set-size (min 30 new-size)))})
+      (d/button {:on-click #(set-grid (create-grid size carve-algo))} "↺"))
+     
      (d/p 
       (d/label {:for "carve-algo" :style {:margin-right "0.5em"}} "Carve:")
       (d/select {:id "carve-algo"
