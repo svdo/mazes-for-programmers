@@ -101,8 +101,7 @@
 
 (defn find-longest-path-keep-dinstances
   [grid starting-point]
-  (let [_ (tap> (assign-distances-keep-intermediates grid starting-point))
-        {:keys [grid intermediates]} (assign-distances-keep-intermediates grid starting-point)
+  (let [{:keys [grid intermediates]} (assign-distances-keep-intermediates grid starting-point)
         second-max (cell-with-highest-distance grid)]
     {:from starting-point
      :to (grid/coords second-max)
