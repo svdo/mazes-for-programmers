@@ -10,8 +10,9 @@
 .hgignore
 .hg/
 /.calva
-.clj-kondo
-.lsp
+.clj-kondo/.cache/
+.lsp/.cache/
+.lsp/sqlite.1.db
 node_modules
 .shadow-cljs
 js
