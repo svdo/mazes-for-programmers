@@ -2,18 +2,21 @@
   (:require [maze.grid :as grid]
             [clojure.set :as set]))
 
+(defn- loop-erased-next-cell [cell path grid]
+  (let [random-neighbor-coords (grid/random-neighbor-coordinate cell)
+        neighbor (grid/get-cell grid random-neighbor-coords)
+        index-in-path (.indexOf path neighbor)
+        path (if (<= 0 index-in-path)
+               (take (inc index-in-path) path)
+               (concat path [neighbor]))]
+    {:updated-path path :next-cell neighbor}))
+
 (defn- loop-erased-random-walk [grid unvisited]
   (loop [cell (rand-nth (seq unvisited))
-         path [cell]
-         grid grid]
+         path [cell]]
     (if (contains? unvisited cell)
-      (let [random-neighbor-coords (grid/random-neighbor-coordinate cell)
-            neighbor (grid/get-cell grid random-neighbor-coords)
-            index-in-path (.indexOf path neighbor)
-            path (if (<= 0 index-in-path)
-                   (take (inc index-in-path) path)
-                   (concat path [neighbor]))]
-        (recur neighbor path grid))
+      (let [{:keys [updated-path next-cell]} (loop-erased-next-cell cell path grid)]
+        (recur next-cell updated-path))
       path)))
 
 (defn- link-cells [grid [cell1 cell2]]
