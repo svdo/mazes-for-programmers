@@ -65,10 +65,14 @@
   (= (coords cell1)
      (coords cell2)))
 
-(defn random-neighbor-coordinate [cell]
+(defn neighbors [cell]
   (->> cell
        ((juxt :north :south :east :west))
-       (filter some?)
+       (filter some?)))
+
+(defn random-neighbor-coordinate [cell]
+  (->> cell
+       neighbors
        rand-nth))
 
 (defn link-cells
