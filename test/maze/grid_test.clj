@@ -52,6 +52,9 @@
     (is (nil? (:south (grid/get-cell grid-10-10 9 3))))
     (is (nil? (:west (grid/get-cell grid-10-10 3 0))))
     (is (nil? (:east (grid/get-cell grid-10-10 3 9)))))
+  
+  (testing "get neighbors"
+    (is (= #{[2 3] [4 3] [3 2] [3 4]} (set (grid/neighbors (grid/get-cell grid-10-10 3 3))))))
 
   (testing "initially no links"
     (is (empty? (:links (-> grid-10-10 (grid/get-cell 1 1))))))

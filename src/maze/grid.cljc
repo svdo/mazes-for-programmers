@@ -98,3 +98,7 @@
 (defn map-cells
   [f grid]
   (mapv #(mapv f %) grid))
+
+(defn all-cells 
+  [grid]
+  (flatten grid))

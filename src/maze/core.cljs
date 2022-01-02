@@ -11,7 +11,8 @@
             [maze.render.helix :refer [Grid]]
             [maze.solve.dijkstra :as dijkstra]
             [maze.carve.aldous-broder :as aldous-broder]
-            [maze.carve.wilson :as wilson]))
+            [maze.carve.wilson :as wilson]
+            [maze.carve.hunt-and-kill :as hunt-and-kill]))
 
 (defn- green-color-fn [max-distance cell]
   (let [distance (:dijkstra/distance cell)
@@ -89,7 +90,8 @@
          "binary-tree" binary-tree/carve
          "sidewinder" sidewinder/carve
          "aldous-broder" aldous-broder/carve
-         "wilson" wilson/carve))))
+         "wilson" wilson/carve
+         "hunt-and-kill" hunt-and-kill/carve))))
 
 (defn- init-grid [{:keys [size carve-algo]}]
   {:size size
@@ -109,7 +111,7 @@
 
 (defnc App []
   (let [[state dispatch] (hooks/use-reducer app-reducer
-                                            {:size 15 :carve-algo "wilson"}
+                                            {:size 15 :carve-algo "hunt-and-kill"}
                                             init-grid)]
     (<>
      (d/h1 "Maze")
@@ -130,6 +132,7 @@
                               (js/console.debug "set-carve-algo" (-> e .-target .-value))
                               (dispatch {:type :set-carve-algo
                                          :payload (-> e .-target .-value)}))}
+                (d/option {:value "hunt-and-kill"} "Hunt and Kill")
                 (d/option {:value "aldous-broder"} "Aldous-Broder")
                 (d/option {:value "wilson"} "Wilson's")
                 (d/option {:value "sidewinder"} "Sidewinder")
